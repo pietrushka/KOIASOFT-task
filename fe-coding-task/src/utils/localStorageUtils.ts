@@ -1,4 +1,4 @@
-import { QueryData } from "../types"
+import { QueryData, SavedQuery } from "../types"
 import { createQueryId } from "./queryIdUtils"
 
 enum LocalStorageKeys {
@@ -31,7 +31,7 @@ export const clearPreferences = () => {
 	preferenceKeys.forEach((key) => localStorage.removeItem(key))
 }
 
-export const getSavedStatistics = (): { queryId: string; comment: string }[] => {
+export const getSavedStatistics = (): SavedQuery[] => {
 	const savedStatisticsString = localStorage.getItem(LocalStorageKeys.SavedStatistics)
 	if (savedStatisticsString) {
 		return JSON.parse(savedStatisticsString)

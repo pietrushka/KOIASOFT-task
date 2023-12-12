@@ -8,10 +8,11 @@ import {
 	clearPreferences,
 } from "../utils/localStorageUtils"
 import { parseQueryId, makeQueryIdReadable } from "../utils/queryIdUtils"
+import { SavedQuery } from "../types"
 
 const SavedQueries = () => {
 	const [, setSearchParams] = useSearchParams()
-	const [saved, setSaved] = useState<{ queryId: string; comment: string }[]>([])
+	const [saved, setSaved] = useState<SavedQuery[]>([])
 
 	// TODO alternatively move savedQueries handling to another context
 	useEffect(() => {

@@ -32,3 +32,8 @@ export type DataContextType = {
 	chartData: ChartData | null
 	fetchChartData: (queryParams: QueryData) => Promise<void>
 }
+
+export type SavedQuery = {
+	queryId: string
+	comment: string
+}
