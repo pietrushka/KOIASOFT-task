@@ -1,14 +1,18 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
-import Stack from "@mui/material/Stack"
-import Button from "@mui/material/Button"
+import { Stack, Button, FormHelperText } from "@mui/material"
 import Dropdown from "./Dropdown"
 import { useData } from "../DataContext"
 import { QueryData } from "../types"
 import { compareYearQuarterStrings } from "../utils"
 import { quarterOptions, houseTypeOptions } from "../paramOptions"
-import { saveUserPreferences, getUserPreferences, clearPreferences } from "../localStorageUtils"
+import {
+	saveUserPreferences,
+	getUserPreferences,
+	clearPreferences,
+	saveStatistics,
+} from "../localStorageUtils"
 
 const QueryForm = () => {
 	const { fetchChartData } = useData()
@@ -20,6 +24,7 @@ const QueryForm = () => {
 			houseType: "",
 		},
 	})
+	const [formError, setFormError] = useState("")
 
 	useEffect(() => {
 		const queryParams = Object.fromEntries(searchParams.entries())
@@ -52,15 +57,47 @@ const QueryForm = () => {
 		setSearchParams(new URLSearchParams(localStoragePreferences))
 	}, [methods, setSearchParams])
 
+	const customValidate = () => {
+		setFormError("")
+
+		const isEndGreaterThanStart = compareYearQuarterStrings(
+			methods.getValues("quartersRangeEnd"),
+			methods.getValues("quartersRangeStart")
+		)
+		if (!isEndGreaterThanStart) {
+			setFormError("Start quarter can't be greater than end one")
+			return false
+		}
+		return true
+	}
+
+	const isSubmitDisabled = methods.formState.isSubmitting
 	const onSubmit: SubmitHandler<QueryData> = async (data) => {
+		const isValid = customValidate()
+
+		if (!isValid) {
+			return
+		}
 		setSearchParams(new URLSearchParams(data))
 		await fetchChartData(data)
 		saveUserPreferences(data)
 	}
 
+	const isSaveDisabled = Object.values(methods.getValues()).includes("")
+	const onSave = () => {
+		const isValid = customValidate()
+		if (!isValid) {
+			return
+		}
+		const query = methods.getValues()
+		saveStatistics(query)
+	}
+
 	const onClear = () => {
 		methods.reset()
+		setFormError("")
 		clearPreferences()
+		setSearchParams(new URLSearchParams())
 	}
 
 	return (
@@ -72,18 +109,6 @@ const QueryForm = () => {
 					options={quarterOptions}
 					{...methods.register("quartersRangeStart", {
 						required: "required",
-						validate: (quartersRangeStart) => {
-							// TODO this probably should be form level error
-							const quartersRangeEnd = methods.getValues("quartersRangeEnd")
-							const isEndGreaterThanStart = compareYearQuarterStrings(
-								quartersRangeEnd,
-								quartersRangeStart
-							)
-							return (
-								isEndGreaterThanStart ||
-								"Start quarter can't be greater than end one"
-							)
-						},
 					})}
 				/>
 				<Dropdown
@@ -102,17 +127,17 @@ const QueryForm = () => {
 				/>
 
 				<Stack spacing={2} direction="row">
-					<Button
-						type="submit"
-						disabled={methods.formState.isSubmitting}
-						variant="contained"
-					>
+					<Button type="submit" disabled={isSubmitDisabled} variant="contained">
 						Submit
+					</Button>
+					<Button disabled={isSaveDisabled} variant="outlined" onClick={onSave}>
+						Save
 					</Button>
 					<Button variant="text" onClick={onClear}>
 						Clear
 					</Button>
 				</Stack>
+				{formError.length ? <FormHelperText>{formError}</FormHelperText> : null}
 			</form>
 		</FormProvider>
 	)

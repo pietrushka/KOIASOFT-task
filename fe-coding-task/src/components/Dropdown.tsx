@@ -38,7 +38,7 @@ const Dropdown: React.FC<RangeInputProps> = ({ options, name, label }) => {
 					</FormControl>
 				)}
 			/>
-			{errors[name] && <FormHelperText>{errors[name].message}</FormHelperText>}
+			{errors[name] ? <FormHelperText>{errors[name].message}</FormHelperText> : null}
 		</Box>
 	)
 }
