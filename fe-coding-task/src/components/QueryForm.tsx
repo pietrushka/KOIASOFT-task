@@ -34,15 +34,23 @@ const QueryForm = () => {
 
 	useEffect(() => {
 		const isFormClear = !Object.values(methods.getValues()).some((x) => x.length > 0)
-		if (isFormClear) {
-			const localStoragePreferences = getUserPreferences()
-			Object.entries(localStoragePreferences).forEach(([key, value]) => {
-				if ((key as keyof QueryData) && value) {
-					methods.setValue(key as keyof QueryData, value)
-				}
-			})
+		if (!isFormClear) {
+			return
 		}
-	}, [methods])
+
+		const localStoragePreferences = getUserPreferences()
+
+		if (Object.values(localStoragePreferences).includes("")) {
+			return
+		}
+
+		Object.entries(localStoragePreferences).forEach(([key, value]) => {
+			if ((key as keyof QueryData) && value) {
+				methods.setValue(key as keyof QueryData, value)
+			}
+		})
+		setSearchParams(new URLSearchParams(localStoragePreferences))
+	}, [methods, setSearchParams])
 
 	const onSubmit: SubmitHandler<QueryData> = async (data) => {
 		setSearchParams(new URLSearchParams(data))
