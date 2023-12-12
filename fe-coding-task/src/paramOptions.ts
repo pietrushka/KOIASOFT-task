@@ -1,5 +1,5 @@
 import { MIN_QUARTER_YEAR } from "./constants"
-import { populateQuarterRange, getPreviousYearQuarterString } from "./utils"
+import { populateQuarterRange, getPreviousYearQuarterString } from "./utils/yearQuarterUtils"
 
 export const quarterOptions = populateQuarterRange(
 	MIN_QUARTER_YEAR,

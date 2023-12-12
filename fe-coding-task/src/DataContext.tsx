@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react"
 import axios from "axios"
-import { populateQuarterRange } from "./utils"
+import { populateQuarterRange } from "./utils/yearQuarterUtils"
 import { ApiResponse, QueryData, ChartData, DataContextType } from "./types"
 import { SSB_TABLE_URL } from "./constants"
 

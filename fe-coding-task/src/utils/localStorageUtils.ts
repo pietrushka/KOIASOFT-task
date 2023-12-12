@@ -1,5 +1,5 @@
-import { QueryData } from "./types"
-import { createQueryId } from "./utils"
+import { QueryData } from "../types"
+import { createQueryId } from "./queryIdUtils"
 
 enum LocalStorageKeys {
 	QuartersRangeStart = "quartersRangeStart",

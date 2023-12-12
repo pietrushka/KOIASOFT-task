@@ -5,14 +5,14 @@ import { Stack, Button, FormHelperText, Grid, useMediaQuery, useTheme } from "@m
 import Dropdown from "./Dropdown"
 import { useData } from "../DataContext"
 import { QueryData } from "../types"
-import { compareYearQuarterStrings } from "../utils"
+import { compareYearQuarterStrings } from "../utils/yearQuarterUtils"
 import { quarterOptions, houseTypeOptions } from "../paramOptions"
 import {
 	saveUserPreferences,
 	getUserPreferences,
 	clearPreferences,
 	saveStatistic,
-} from "../localStorageUtils"
+} from "../utils/localStorageUtils"
 
 const QueryForm = () => {
 	const theme = useTheme()

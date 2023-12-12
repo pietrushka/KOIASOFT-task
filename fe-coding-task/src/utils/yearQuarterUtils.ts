@@ -1,19 +1,10 @@
-import { YearQuarter, QueryData } from "./types"
-import { QUARTERS_IN_YEAR } from "./constants"
+import { YearQuarter } from "../types"
+import { QUARTERS_IN_YEAR } from "../constants"
 
 export const parseQuarterString = (quarterString: string) => quarterString.split("K").map(Number)
 
 export const createQuarterString = (data: YearQuarter) => {
 	return `${data.year}K${data.quarter}`
-}
-
-export const createQueryId = (query: QueryData) => {
-	return `${query.quartersRangeStart}-${query.quartersRangeEnd}-${query.houseType}`
-}
-
-export const parseQueryId = (queryId: string) => {
-	const [quartersRangeStart, quartersRangeEnd, houseType] = queryId.split("-")
-	return { quartersRangeStart, quartersRangeEnd, houseType }
 }
 
 export const populateQuarterRange = (min: string, max: string) => {
