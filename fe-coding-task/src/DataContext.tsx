@@ -1,8 +1,8 @@
 import { createContext, useState, useContext } from "react"
 import axios from "axios"
-import { QueryData } from "./types"
 import { populateQuarterRange } from "./utils"
-import { ApiResponse, ChartData, DataContextType } from "./types"
+import { ApiResponse, QueryData, ChartData, DataContextType } from "./types"
+import { SSB_TABLE_URL } from "./constants"
 
 export const useData = () => {
 	const context = useContext(DataContext)
@@ -50,15 +50,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		}
 
 		try {
-			const response = (await axios.post(
-				"https://data.ssb.no/api/v0/no/table/07241",
-				postData,
-				{
-					headers: {
-						"Content-Type": "application/json",
-					},
-				}
-			)) as ApiResponse
+			const response = (await axios.post(SSB_TABLE_URL, postData, {
+				headers: {
+					"Content-Type": "application/json",
+				},
+			})) as ApiResponse
 
 			const newChartData = {
 				values: response.data.value,
