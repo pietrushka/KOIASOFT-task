@@ -31,22 +31,37 @@ export const clearPreferences = () => {
 	preferenceKeys.forEach((key) => localStorage.removeItem(key))
 }
 
-export const getSavedStatistics = () => {
+export const getSavedStatistics = (): { queryId: string; comment: string }[] => {
 	const savedStatisticsString = localStorage.getItem(LocalStorageKeys.SavedStatistics)
 	if (savedStatisticsString) {
 		return JSON.parse(savedStatisticsString)
 	}
-	return {}
+	return []
 }
 
-export const saveStatistics = (query: QueryData, comment: string = "") => {
+export const saveStatistic = (query: QueryData, comment: string = "") => {
 	const savedStatistics = getSavedStatistics()
 	const queryId = createSearchId(query)
-	localStorage.setItem(
-		LocalStorageKeys.SavedStatistics,
-		JSON.stringify({
-			...savedStatistics,
-			[queryId]: comment,
-		})
-	)
+
+	const existingIndex = savedStatistics.findIndex((x) => x.queryId === queryId)
+
+	if (existingIndex !== -1) {
+		savedStatistics[existingIndex].comment = comment
+	} else {
+		const newEntry = {
+			queryId,
+			comment,
+		}
+		savedStatistics.push(newEntry)
+	}
+
+	localStorage.setItem(LocalStorageKeys.SavedStatistics, JSON.stringify(savedStatistics))
+	window.dispatchEvent(new Event("storage"))
+}
+
+export const deleteStatistic = (queryId: string) => {
+	const savedStatistics = getSavedStatistics()
+	const newStatistics = savedStatistics.filter((x) => x.queryId !== queryId)
+	localStorage.setItem(LocalStorageKeys.SavedStatistics, JSON.stringify(newStatistics))
+	window.dispatchEvent(new Event("storage"))
 }

@@ -11,7 +11,7 @@ import {
 	saveUserPreferences,
 	getUserPreferences,
 	clearPreferences,
-	saveStatistics,
+	saveStatistic,
 } from "../localStorageUtils"
 
 const QueryForm = () => {
@@ -90,7 +90,7 @@ const QueryForm = () => {
 			return
 		}
 		const query = methods.getValues()
-		saveStatistics(query)
+		saveStatistic(query)
 	}
 
 	const onClear = () => {
