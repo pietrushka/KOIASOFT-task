@@ -6,13 +6,14 @@ import {
 	saveStatistic,
 	deleteStatistic,
 	clearPreferences,
-} from "../localStorageUtils"
-import { parseQueryId } from "../utils"
+} from "../utils/localStorageUtils"
+import { parseQueryId, makeQueryIdReadable } from "../utils/queryIdUtils"
 
 const SavedQueries = () => {
 	const [, setSearchParams] = useSearchParams()
 	const [saved, setSaved] = useState<{ queryId: string; comment: string }[]>([])
 
+	// TODO alternatively move savedQueries handling to another context
 	useEffect(() => {
 		const handleStorageChange = () => {
 			setSaved(getSavedStatistics())
@@ -53,7 +54,7 @@ const SavedQueries = () => {
 					<ListItem key={item.queryId} divider>
 						<Grid container spacing={2} alignItems="center">
 							<Grid item xs={12} sm={3}>
-								<ListItemText primary={item.queryId} />
+								<ListItemText primary={makeQueryIdReadable(item.queryId)} />
 							</Grid>
 							<Grid item xs={12} sm={3}>
 								<TextField

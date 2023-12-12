@@ -10,3 +10,8 @@ export const parseQueryId = (queryId: string) => {
 	return { quartersRangeStart, quartersRangeEnd, houseType }
 }
 
+export const makeQueryIdReadable = (queryId: string) => {
+	const { quartersRangeStart, quartersRangeEnd, houseType } = parseQueryId(queryId)
+	const houseTypeReadable = houseTypeOptions.find((x) => x.value === houseType)?.label
+	return `From: ${quartersRangeStart}; To: ${quartersRangeEnd}; House Type: ${houseTypeReadable}`
+}
