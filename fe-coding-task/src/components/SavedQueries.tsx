@@ -7,9 +7,9 @@ import {
 	deleteStatistic,
 	clearPreferences,
 } from "../localStorageUtils"
-import { parseSearchId } from "../utils"
+import { parseQueryId } from "../utils"
 
-const SavedSearches = () => {
+const SavedQueries = () => {
 	const [, setSearchParams] = useSearchParams()
 	const [saved, setSaved] = useState<{ queryId: string; comment: string }[]>([])
 
@@ -26,7 +26,7 @@ const SavedSearches = () => {
 	}, [])
 
 	const handleSave = (queryId: string, comment?: string) => {
-		saveStatistic(parseSearchId(queryId), comment)
+		saveStatistic(parseQueryId(queryId), comment)
 		setSaved(getSavedStatistics())
 	}
 
@@ -36,7 +36,7 @@ const SavedSearches = () => {
 	}
 
 	const handleLoad = (queryId: string) => {
-		const data = parseSearchId(queryId)
+		const data = parseQueryId(queryId)
 		setSearchParams(new URLSearchParams(data))
 		clearPreferences()
 	}
@@ -80,4 +80,4 @@ const SavedSearches = () => {
 	)
 }
 
-export default SavedSearches
+export default SavedQueries

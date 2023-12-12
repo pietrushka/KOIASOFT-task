@@ -2,7 +2,7 @@ import QueryForm from "./components/QueryForm"
 import Chart from "./components/Chart"
 import { BrowserRouter } from "react-router-dom"
 import { DataProvider } from "./DataContext"
-import SavedSearches from "./components/SavedSearches"
+import SavedQueries from "./components/SavedQueries"
 import { Container } from "@mui/material"
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 				<DataProvider>
 					<QueryForm />
 					<Chart />
-					<SavedSearches />
+					<SavedQueries />
 				</DataProvider>
 			</Container>
 		</BrowserRouter>

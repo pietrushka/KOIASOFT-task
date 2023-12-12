@@ -7,12 +7,12 @@ export const createQuarterString = (data: YearQuarter) => {
 	return `${data.year}K${data.quarter}`
 }
 
-export const createSearchId = (query: QueryData) => {
+export const createQueryId = (query: QueryData) => {
 	return `${query.quartersRangeStart}-${query.quartersRangeEnd}-${query.houseType}`
 }
 
-export const parseSearchId = (searchId: string) => {
-	const [quartersRangeStart, quartersRangeEnd, houseType] = searchId.split("-")
+export const parseQueryId = (queryId: string) => {
+	const [quartersRangeStart, quartersRangeEnd, houseType] = queryId.split("-")
 	return { quartersRangeStart, quartersRangeEnd, houseType }
 }
 

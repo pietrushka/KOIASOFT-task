@@ -1,5 +1,5 @@
 import { QueryData } from "./types"
-import { createSearchId } from "./utils"
+import { createQueryId } from "./utils"
 
 enum LocalStorageKeys {
 	QuartersRangeStart = "quartersRangeStart",
@@ -41,7 +41,7 @@ export const getSavedStatistics = (): { queryId: string; comment: string }[] => 
 
 export const saveStatistic = (query: QueryData, comment: string = "") => {
 	const savedStatistics = getSavedStatistics()
-	const queryId = createSearchId(query)
+	const queryId = createQueryId(query)
 
 	const existingIndex = savedStatistics.findIndex((x) => x.queryId === queryId)
 
