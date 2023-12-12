@@ -8,6 +8,7 @@ import { useData } from "../DataContext"
 import { QueryData } from "../types"
 import { compareYearQuarterStrings } from "../utils"
 import { quarterOptions, houseTypeOptions } from "../paramOptions"
+import { saveUserPreferences, getUserPreferences, clearPreferences } from "../localStorageUtils"
 
 const QueryForm = () => {
 	const { fetchChartData } = useData()
@@ -22,16 +23,36 @@ const QueryForm = () => {
 
 	useEffect(() => {
 		const queryParams = Object.fromEntries(searchParams.entries())
-		Object.entries(queryParams).forEach(([key, value]) => {
-			if (key as keyof QueryData) {
-				methods.setValue(key as keyof QueryData, value)
-			}
-		})
+		if (queryParams) {
+			Object.entries(queryParams).forEach(([key, value]) => {
+				if (key as keyof QueryData) {
+					methods.setValue(key as keyof QueryData, value)
+				}
+			})
+		}
 	}, [methods, searchParams])
 
-	const onSubmit: SubmitHandler<QueryData> = (data) => {
+	useEffect(() => {
+		const isFormClear = !Object.values(methods.getValues()).some((x) => x.length > 0)
+		if (isFormClear) {
+			const localStoragePreferences = getUserPreferences()
+			Object.entries(localStoragePreferences).forEach(([key, value]) => {
+				if ((key as keyof QueryData) && value) {
+					methods.setValue(key as keyof QueryData, value)
+				}
+			})
+		}
+	}, [methods])
+
+	const onSubmit: SubmitHandler<QueryData> = async (data) => {
 		setSearchParams(new URLSearchParams(data))
-		fetchChartData(data)
+		await fetchChartData(data)
+		saveUserPreferences(data)
+	}
+
+	const onClear = () => {
+		methods.reset()
+		clearPreferences()
 	}
 
 	return (
@@ -79,6 +100,9 @@ const QueryForm = () => {
 						variant="contained"
 					>
 						Submit
+					</Button>
+					<Button variant="text" onClick={onClear}>
+						Clear
 					</Button>
 				</Stack>
 			</form>
