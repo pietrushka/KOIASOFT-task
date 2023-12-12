@@ -8,3 +8,27 @@ export type QueryData = {
 	quartersRangeEnd: string
 	houseType: string
 }
+
+export type ApiResponse = {
+	data: {
+		dimension: {
+			Tid: {
+				category: {
+					index: Record<string, string>
+					label: Record<string, string>
+				}
+			}
+		}
+		value: number[]
+	}
+}
+
+export type ChartData = {
+	values: number[]
+	labels: string[]
+}
+
+export type DataContextType = {
+	chartData: ChartData | null
+	fetchChartData: (queryParams: QueryData) => Promise<void>
+}

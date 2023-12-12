@@ -2,23 +2,7 @@ import { createContext, useState, useContext } from "react"
 import axios from "axios"
 import { QueryData } from "./types"
 import { populateQuarterRange } from "./utils"
-
-type ApiData = {
-	dimension: {
-		Tid: {
-			category: {
-				index: Record<string, string>
-				label: Record<string, string>
-			}
-		}
-	}
-	value: number[]
-}
-
-type DataContextType = {
-	data: ApiData | null
-	updateData: (queryParams: QueryData) => Promise<void>
-}
+import { ApiResponse, ChartData, DataContextType } from "./types"
 
 export const useData = () => {
 	const context = useContext(DataContext)
@@ -31,8 +15,8 @@ export const useData = () => {
 export const DataContext = createContext<DataContextType | null>(null)
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-	const [data, setData] = useState<ApiData | null>(null)
-	const updateData = async (queryParams: QueryData) => {
+	const [chartData, setChartData] = useState<ChartData | null>(null)
+	const fetchChartData = async (queryParams: QueryData) => {
 		const postData = {
 			query: [
 				{
@@ -66,7 +50,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 		}
 
 		try {
-			const response = await axios.post(
+			const response = (await axios.post(
 				"https://data.ssb.no/api/v0/no/table/07241",
 				postData,
 				{
@@ -74,13 +58,22 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 						"Content-Type": "application/json",
 					},
 				}
-			)
-			console.log(response)
-			setData(response.data)
+			)) as ApiResponse
+
+			const newChartData = {
+				values: response.data.value,
+				labels: Object.keys(response.data.dimension.Tid.category.label),
+			}
+
+			setChartData(newChartData)
 		} catch (error) {
 			console.error("Error fetching data:", error)
 		}
 	}
 
-	return <DataContext.Provider value={{ data, updateData }}>{children}</DataContext.Provider>
+	return (
+		<DataContext.Provider value={{ chartData, fetchChartData }}>
+			{children}
+		</DataContext.Provider>
+	)
 }

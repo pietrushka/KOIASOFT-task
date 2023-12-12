@@ -1,4 +1,3 @@
-import React from "react"
 import "./App.css"
 import QueryForm from "./components/QueryForm"
 import Chart from "./components/Chart"

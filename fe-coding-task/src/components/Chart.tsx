@@ -3,19 +3,18 @@ import { LineChart } from "@mui/x-charts/LineChart"
 import { useData } from "../DataContext"
 
 const Chart = () => {
-	const { data } = useData()
+	const { chartData } = useData()
 
-	if (!data) {
+	if (!chartData) {
 		return null
 	}
 
-	const xLabels = Object.keys(data.dimension.Tid.category.label)
-	const values = data.value
+	const { values, labels } = chartData
 
 	return (
 		<Box>
 			<LineChart
-				xAxis={[{ scaleType: "point", data: xLabels }]}
+				xAxis={[{ scaleType: "point", data: labels }]}
 				series={[{ data: values }]}
 				height={300}
 				sx={{

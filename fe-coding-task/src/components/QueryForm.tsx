@@ -10,7 +10,7 @@ import { compareYearQuarterStrings } from "../utils"
 import { quarterOptions, houseTypeOptions } from "../paramOptions"
 
 const QueryForm = () => {
-	const { updateData } = useData()
+	const { fetchChartData } = useData()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const methods = useForm<QueryData>({
 		defaultValues: {
@@ -31,7 +31,7 @@ const QueryForm = () => {
 
 	const onSubmit: SubmitHandler<QueryData> = (data) => {
 		setSearchParams(new URLSearchParams(data))
-		updateData(data)
+		fetchChartData(data)
 	}
 
 	return (
