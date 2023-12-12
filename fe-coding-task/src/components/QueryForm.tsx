@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
-import { Stack, Button, FormHelperText } from "@mui/material"
+import { Stack, Button, FormHelperText, Grid, useMediaQuery, useTheme } from "@mui/material"
 import Dropdown from "./Dropdown"
 import { useData } from "../DataContext"
 import { QueryData } from "../types"
@@ -15,6 +15,8 @@ import {
 } from "../localStorageUtils"
 
 const QueryForm = () => {
+	const theme = useTheme()
+	const isMobile = useMediaQuery(theme.breakpoints.down("sm"))
 	const { fetchChartData } = useData()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const methods = useForm<QueryData>({
@@ -35,6 +37,7 @@ const QueryForm = () => {
 				}
 			})
 		}
+		methods.clearErrors()
 	}, [methods, searchParams])
 
 	useEffect(() => {
@@ -103,41 +106,49 @@ const QueryForm = () => {
 	return (
 		<FormProvider {...methods}>
 			<form onSubmit={methods.handleSubmit(onSubmit)}>
-				<p>Quarter Range</p>
-				<Dropdown
-					label="From"
-					options={quarterOptions}
-					{...methods.register("quartersRangeStart", {
-						required: "required",
-					})}
-				/>
-				<Dropdown
-					label="To"
-					options={quarterOptions}
-					{...methods.register("quartersRangeEnd", {
-						required: "required",
-					})}
-				/>
-				<Dropdown
-					label="House Type"
-					options={houseTypeOptions}
-					{...methods.register("houseType", {
-						required: "House type is required",
-					})}
-				/>
-
-				<Stack spacing={2} direction="row">
-					<Button type="submit" disabled={isSubmitDisabled} variant="contained">
-						Submit
-					</Button>
-					<Button disabled={isSaveDisabled} variant="outlined" onClick={onSave}>
-						Save
-					</Button>
-					<Button variant="text" onClick={onClear}>
-						Clear
-					</Button>
-				</Stack>
-				{formError.length ? <FormHelperText>{formError}</FormHelperText> : null}
+				<Grid container spacing={3}>
+					<Grid item xs={12} md={6}>
+						<Dropdown
+							label="From"
+							options={quarterOptions}
+							{...methods.register("quartersRangeStart", {
+								required: "required",
+							})}
+						/>
+					</Grid>
+					<Grid item xs={12} md={6}>
+						<Dropdown
+							label="To"
+							options={quarterOptions}
+							{...methods.register("quartersRangeEnd", { required: "required" })}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Dropdown
+							label="House Type"
+							options={houseTypeOptions}
+							{...methods.register("houseType", {
+								required: "House type is required",
+							})}
+						/>
+					</Grid>
+					<Grid item xs={12}>
+						<Stack spacing={2} direction={isMobile ? "column" : "row"}>
+							<Button type="submit" disabled={isSubmitDisabled} variant="contained">
+								Submit
+							</Button>
+							<Button disabled={isSaveDisabled} variant="outlined" onClick={onSave}>
+								Save
+							</Button>
+							<Button variant="text" onClick={onClear}>
+								Clear
+							</Button>
+						</Stack>
+					</Grid>
+				</Grid>
+				{formError.length ? (
+					<FormHelperText sx={{ color: "red" }}>{formError}</FormHelperText>
+				) : null}
 			</form>
 		</FormProvider>
 	)

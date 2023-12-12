@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Button, List, ListItem, ListItemText, TextField, Grid } from "@mui/material"
+import { Button, List, ListItem, ListItemText, TextField, Grid, Typography } from "@mui/material"
 import { useSearchParams } from "react-router-dom"
 import {
 	getSavedStatistics,
@@ -46,30 +46,37 @@ const SavedSearches = () => {
 	}
 
 	return (
-		<List>
-			{saved.map((item) => (
-				<ListItem key={item.queryId} divider>
-					<Grid container spacing={2}>
-						<Grid item xs={6}>
-							<ListItemText primary={item.queryId} />
+		<>
+			<Typography variant="h6">Saved searches:</Typography>
+			<List>
+				{saved.map((item) => (
+					<ListItem key={item.queryId} divider>
+						<Grid container spacing={2} alignItems="center">
+							<Grid item xs={12} sm={3}>
+								<ListItemText primary={item.queryId} />
+							</Grid>
+							<Grid item xs={12} sm={3}>
+								<TextField
+									fullWidth
+									value={item.comment}
+									onChange={(e) => handleSave(item.queryId, e.target.value)}
+								/>
+							</Grid>
+							<Grid item xs={6} sm={3}>
+								<Button fullWidth onClick={() => handleDelete(item.queryId)}>
+									Delete
+								</Button>
+							</Grid>
+							<Grid item xs={6} sm={3}>
+								<Button fullWidth onClick={() => handleLoad(item.queryId)}>
+									Load
+								</Button>
+							</Grid>
 						</Grid>
-						<Grid item xs={6}>
-							<TextField
-								fullWidth
-								value={item.comment}
-								onChange={(e) => handleSave(item.queryId, e.target.value)}
-							/>
-						</Grid>
-						<Grid item xs={4}>
-							<Button onClick={() => handleDelete(item.queryId)}>Delete</Button>
-						</Grid>
-						<Grid item xs={4}>
-							<Button onClick={() => handleLoad(item.queryId)}>Load</Button>
-						</Grid>
-					</Grid>
-				</ListItem>
-			))}
-		</List>
+					</ListItem>
+				))}
+			</List>
+		</>
 	)
 }
 
